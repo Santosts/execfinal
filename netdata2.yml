@@ -1,0 +1,57 @@
+---
+ - hosts: netdata
+   vars:
+     http_port: 19999
+     max_clients: 200
+   remote_user: root
+
+   tasks:
+     - name: EPEL
+       yum:
+         name: epel-release
+         state: present
+
+     - name: dependecias netdata
+       yum:
+         name:
+           - zlib-devel
+           - libuuid-devel 
+           - libmnl-devel
+           - gcc 
+           - make 
+           - git 
+           - autoconf 
+           - autogen 
+           - automake 
+           - pkgconfig
+         state: present
+       tag: dependencia
+   
+     - name: complemento
+       yum:
+         name:
+           - curl
+           - jq
+           - nodejs
+       tag: complementos
+
+     - name: instalando
+       yum:
+         name: netdata
+         state: installed
+       
+     - name: iniciando o servico
+       service:  
+         name: netdata
+         state: started
+      
+     - name: habilitando o servico
+       service:  
+         name: netdata
+         enabled: yes   
+     
+     - name: config firewall
+       shell: firewall-cmd --permanent --zone=public --add-port=19999/tcp
+
+     - name: reiniciando firewall
+       shell: firewall-cmd --reload
