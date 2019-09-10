@@ -1,0 +1,9 @@
+---
+ # Apontamento Graylog
+ 
+- hosts: graylog
+  user: root
+
+  tasks:
+    - name: configurando apontamento graylog
+      shell: echo *.* @192.168.246.139:5140 > /etc/rsyslog.conf
