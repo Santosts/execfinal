@@ -49,7 +49,18 @@
        service:  
          name: netdata
          enabled: yes   
-     
+    
+     - name: bind to
+       shell: echo "bind to = *" >> /etc/netdata/netdata.conf
+
+     - name: permissão de conexão
+       shell: echo "allow connections from = localhost 10.* 192.168.*" >> /etc/netdata/netdata.conf
+
+     - name: reiniciando netdata
+       service:
+         name: netdata
+         state: restarted 
+
      - name: config firewall
        shell: firewall-cmd --permanent --zone=public --add-port=19999/tcp
 
