@@ -1,0 +1,42 @@
+---
+- hosts: terraform
+  user: root
+
+  tasks:
+  - name: install java
+    yum:
+      name: java
+      state: present    
+ 
+  - name: rundeck
+    shell: rpm -Uvh https://repo.rundeck.org/latest.rpm
+
+  - name: instalacao rundeck
+    yum:
+      name: rundeck
+      state: latest
+
+  - name: habilitando rundeck
+    service:
+      name: rundeckd
+      enabled: yes
+
+  - name: Download Terraform
+    get_url:
+      url: https://releases.hashicorp.com/terraform/0.12.5/terraform_0.12.5_linux_amd64.zip
+      dest: /root
+
+  - name: Instalacao Unzip
+    package: name=unzip state=latest
+
+  - name: Descompactar o pacote
+    shell: /usr/bin/unzip /root/terraform_0.12.5_linux_amd64.zip
+
+  - name: Copy Terraform
+    shell: /usr/bin/mv /root/terraform /usr/bin/
+  
+  - name: habilitar porta
+    shell: fiewall-cmd --permanent --zone=public --add-port=4440/tcp
+
+  - name: reboot firewall 
+    shell: firewall-cmd --reload
