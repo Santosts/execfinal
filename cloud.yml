@@ -1,0 +1,23 @@
+---
+- hosts: terraform 
+  user: root 
+  
+  tasks:
+  - name: Diretorio GCP
+    file:
+      path: /root/google-cloud
+      state: directory
+
+  - name: repo refresh
+    copy:
+     src: /root/.ansible/google-cloud-sdk.repo
+     dest: /etc/yum.repos.d/google-cloud-sdk.repo
+   
+  - name: google SDK
+    package: name=google-cloud-sdk state=latest
+
+#  - name: AWS cloud
+#    yum:
+#      name: cloud-init
+#      state: present
+
